@@ -4,7 +4,7 @@ In This repo i documented my  approach to deploying a **Web UI** and **API** on 
 
 
 ---
-![AirTekDemo](./images/Picture7.png)
+![AirTekDemo](./images/map.png)
 *Architectural Diagram and Flows*
 
 Based off instructions, the architecture ensures:
