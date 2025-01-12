@@ -28,10 +28,6 @@ While the process went smoothly at times, there were moments where I had to paus
 ##  Architecture Overview
 
 ### Key Components:
-![Dependencies](./images/1.png)
-
-*All Dependencies properly provisioned.*
-
 
 1. **API Service**: 
    - Deployed in private subnets for security.
@@ -57,6 +53,9 @@ During the initial setup, ECS tasks were failing health checks because the servi
 
 ![Jenkins Pipeline](./images/2.png)
 *API `/health` endpoint.*
+
+<img src="./images/2.png" width="400" height="300" alt="air-tek-demo">
+<img src="./images/2.png" width="500" height="300" alt="air-tek-demo">
 
 
 - **Web UI Service** (`Startup.cs`): I also Added `/health` endpoint for Web UI health monitoring.
