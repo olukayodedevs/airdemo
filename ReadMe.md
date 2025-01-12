@@ -51,16 +51,20 @@ During the initial setup, ECS tasks were failing health checks because the servi
 
 - **API Service** (`Startup.cs`): I Added `/health` endpoint to confirm readiness.
 
-![Jenkins Pipeline](./images/2.png)
-*API `/health` endpoint.*
+![AirTekDemo](./images/1.png)
+*Updated the  `Startup.cs` for API to create an endpoint for healthchecks*
 
-<img src="./images/2.png" width="400" height="300" alt="air-tek-demo">
-<img src="./images/2.png" width="500" height="300" alt="air-tek-demo">
 
 
 - **Web UI Service** (`Startup.cs`): I also Added `/health` endpoint for Web UI health monitoring.
 
-_Image placeholder for Web UI `/health` endpoint._
+![AirTekDemo](./images/2.png)
+*Also edited the  `Startup.cs` for WEB to create an endpoint for healthchecks*
+
+- **Test Ran the Endpoint** 
+
+![AirTekDemo](./images/6.png)
+*This will return a `OK 200` instead of Healthy when ALB makes an HTTP request or if i did a `curl http://localhost:3000/health`*
 
 ---
 
@@ -73,23 +77,25 @@ Pulumi was the IaC tool of choice to provision AWS resources like VPCs, subnets,
 #### ECS Task Definition:
 I added health check configurations to enable seamless registration with the ALB.
 
-_Image placeholder for ECS Task Definition._
+![AirTekDemo](./images/10.png)
 
 #### ALB Target Group:
 Defined `/health` as the health check endpoint so as to make sure the HTTP request from ALB always return `Ok 200` which means the  container is healthy
 
-_Image placeholder for ALB Target Group configuration._
-
 #### Security Groups:
 Ensured ALB and ECS tasks could communicate securely without any network bottlenecks.
 
-_Image placeholder for Security Group configuration._
+![AirTekDemo](./images/11.png)
+*The  syntax for curating a befitting security group for the apps delicate network requirements*
 
 ---
 
 ##  Challenges and Troubleshooting
 
 ### Health Check Failures
+
+![AirTekDemo](./images/4.png)
+*The API services is constantly being marked as unhealthy  hence preventing load balancing *
 
 **Issue**: 
 ECS tasks kept failing to register with the ALB.
@@ -104,13 +110,57 @@ ECS tasks kept failing to register with the ALB.
 ---
 ### RecourceInitializationError
 
+![AirTekDemo](./images/5.png)
+*The Web service on the other hand suffered this *
+
+**Root Cause Analysis**
+
+
+The error itself suggested that the ECS tasks in private subnets couldn't connect to the ECR endpoint. I systematically checked all possible causes, and here’s a breakdown of what I found and how I tackled it.
+
+
+**1. Missing NAT Gateway**
+ECS tasks running in private subnets require a **NAT Gateway** to access the internet for pulling images from ECR. My first suspicion was a possible misconfiguration with the NAT Gateway or the associated route tables.
+
+- **Check**: I reviewed the Pulumi configuration to ensure private subnets were properly routed through the NAT Gateway.  
+- **Outcome**: Found an issue with the NAT Gateway’s association to the route table, fixed it, and re-routed the traffic. This resolved part of the connectivity issue.
+
+**2. IAM Role Misconfiguration**
+The ECS task execution role needs the correct permissions to pull images from ECR. Specifically, the **`AmazonECSTaskExecutionRolePolicy`** must be attached to the role.
+
+- **Check**: Verified the attached IAM policies in the AWS Console and also listed them via CLI.  
+- **Outcome**: IAM permissions were correctly configured, so this wasn’t the root cause. Still, it was worth confirming to rule out any surprises.
+
+
+**3. DNS Resolution Issues**
+Private subnets must have **DNS resolution** and **hostnames** enabled for tasks to resolve the ECR endpoint correctly.
+
+- **Check**: I ensured that DNS resolution was enabled in the VPC settings. To confirm further, I tested DNS resolution from an instance in the private subnet to ensure it could resolve ECR’s endpoint.  
+- **Outcome**: DNS resolved successfully, confirming there were no misconfigurations here. Another potential cause ruled out.
+
+
+**4. Security Group Rules**
+Misconfigured **security groups** could block communication between the ECS tasks, NAT Gateway, and ECR. This was my next target for verification.
+
+- **Check**: I inspected all inbound and outbound rules for both ECS tasks and the NAT Gateway. Specifically, I ensured:
+  - The NAT Gateway’s security group allowed outbound internet access.
+  - ECS tasks had outbound rules permitting all traffic.  
+- **Outcome**: Security groups were configured correctly, so no adjustments were needed here.
+
+
+
+## **Root Cause**
+After digging through logs and running these checks, it turned out the **missing or misconfigured NAT Gateway** was the primary issue. Correcting this and ensuring the private subnets had proper internet access resolved the `ResourceInitializationError`.
+
 ---
 
 ### HTTP 503 Errors
 
+![AirTekDemo](./images/4.png)
+*This pops up anytime i tried to access the application, mostly due to the two issues above *
 
 **Issue**: 
-Even after fixing health check failures, the ALB occasionally returned `503 Service Unavailable`. This is the kind of issue that feels minor but keeps you up at night wondering what you missed!
+Even after i fixed the health check failures, the ALB occasionally returned `503 Service Unavailable`. This is the kind of issue that feels minor but keeps you up at night wondering what you missed!
 
 **Analysis**:
 - Possible reasons:
@@ -124,8 +174,8 @@ Even after fixing health check failures, the ALB occasionally returned `503 Serv
 3. Ran connectivity tests using `curl` to debug internal networking between the Web UI and API.
 4. and the last step i took was i l created an intance in the private subnet, then i tried to access the ECR from there through the NAT gatway, and of course assigning an IAM role to it. 
 
-_Image placeholder for connectivity testing commands._
-
+![AirTekDemo](./images/8.png)
+* How the normal app should have ran *
 ---
 
 ##  Debugging Tools and Techniques
@@ -140,7 +190,8 @@ _Image placeholder for connectivity testing commands._
 3. **Direct Connectivity Tests**:
    - SSHed into a bastion host to test internal API and Web UI endpoints using `curl`.
 
-_Image placeholder for CloudWatch logs or troubleshooting outputs._
+![AirTekDemo](./images/9.png)
+*Screenshot after a successfull `pulumi up` which automated the creation of all the needed resources on a single click *
 
 ---
 
