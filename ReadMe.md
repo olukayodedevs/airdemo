@@ -95,7 +95,7 @@ Ensured ALB and ECS tasks could communicate securely without any network bottlen
 ### Health Check Failures
 
 ![AirTekDemo](./images/4.png)
-*The API services is constantly being marked as unhealthy  hence preventing load balancing *
+*The API services is constantly being marked as unhealthy  hence preventing load balancing*
 
 **Issue**: 
 ECS tasks kept failing to register with the ALB.
@@ -111,7 +111,7 @@ ECS tasks kept failing to register with the ALB.
 ### RecourceInitializationError
 
 ![AirTekDemo](./images/5.png)
-*The Web service on the other hand suffered this *
+*The Web service on the other hand suffered this*
 
 **Root Cause Analysis**
 
@@ -157,7 +157,7 @@ After digging through logs and running these checks, it turned out the **missing
 ### HTTP 503 Errors
 
 ![AirTekDemo](./images/4.png)
-*This pops up anytime i tried to access the application, mostly due to the two issues above *
+*This pops up anytime i tried to access the application, mostly due to the two issues above*
 
 **Issue**: 
 Even after i fixed the health check failures, the ALB occasionally returned `503 Service Unavailable`. This is the kind of issue that feels minor but keeps you up at night wondering what you missed!
@@ -175,7 +175,7 @@ Even after i fixed the health check failures, the ALB occasionally returned `503
 4. and the last step i took was i l created an intance in the private subnet, then i tried to access the ECR from there through the NAT gatway, and of course assigning an IAM role to it. 
 
 ![AirTekDemo](./images/8.png)
-* How the normal app should have ran *
+*How the normal app should have ran*
 ---
 
 ##  Debugging Tools and Techniques
@@ -191,7 +191,7 @@ Even after i fixed the health check failures, the ALB occasionally returned `503
    - SSHed into a bastion host to test internal API and Web UI endpoints using `curl`.
 
 ![AirTekDemo](./images/9.png)
-*Screenshot after a successfull `pulumi up` which automated the creation of all the needed resources on a single click *
+*Screenshot after a successfull `pulumi up` which created all the needed resources on a single click*
 
 ---
 
