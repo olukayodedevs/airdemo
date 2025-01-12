@@ -1,4 +1,4 @@
-# Deploying into AWS with Pulumi : A DotNet 5.0 build
+# Deploying into AWS with Pulumi : A .Net 5.0 build
 
 In This repo i documented my  approach to deploying a **Web UI** and **API** on **AWS ECS**, leveraging **Pulumi** for IAC. The project was a blend of implementing robust configurations, possible real-world challenge and yes, the ``HTTP 503 errors`` I had to talk about that annoying thing elaborately in this read me.
 
@@ -156,7 +156,7 @@ After digging through logs and running these checks, it turned out the **missing
 
 ### HTTP 503 Errors
 
-![AirTekDemo](./images/4.png)
+![AirTekDemo](./images/8.png)
 *This pops up anytime i tried to access the application, mostly due to the two issues above*
 
 **Issue**: 
@@ -174,8 +174,9 @@ Even after i fixed the health check failures, the ALB occasionally returned `503
 3. Ran connectivity tests using `curl` to debug internal networking between the Web UI and API.
 4. and the last step i took was i l created an intance in the private subnet, then i tried to access the ECR from there through the NAT gatway, and of course assigning an IAM role to it. 
 
-![AirTekDemo](./images/8.png)
+![AirTekDemo](./images/7.png)
 *How the normal app should have ran*
+
 ---
 
 ##  Debugging Tools and Techniques
