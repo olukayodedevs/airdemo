@@ -29,6 +29,7 @@ While the process went smoothly at times, there were moments where I had to paus
 
 ### Key Components:
 ![Dependencies](./images/1.png)
+
 *All Dependencies properly provisioned.*
 
 
