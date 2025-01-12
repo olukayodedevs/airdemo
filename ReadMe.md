@@ -3,6 +3,9 @@
 In This repo i documented my  approach to deploying a **Web UI** and **API** on **AWS ECS**, leveraging **Pulumi** for IAC. The project was a blend of implementing robust configurations, possible real-world challenge and yes, the ``HTTP 503 errors`` I had to talk about that annoying thing elaborately in this read me.
 
 
+---
+![AirTekDemo](./images/Picture7.png)
+*Architectural Diagram and Flows*
 
 Based off instructions, the architecture ensures:
 
@@ -212,7 +215,7 @@ The complete Pulumi scripts for this deployment are available in the repository.
 
 ---
 
-##  Possible Modifications=
+##  Possible Modifications
 
 1. **Enhanced Observability**:
    - Application of more AWS services to help get to the root cause.
