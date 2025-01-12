@@ -28,6 +28,9 @@ While the process went smoothly at times, there were moments where I had to paus
 ##  Architecture Overview
 
 ### Key Components:
+![Dependencies](./images/1.png)
+*All Dependencies properly provisioned.*
+
 
 1. **API Service**: 
    - Deployed in private subnets for security.
@@ -51,7 +54,9 @@ During the initial setup, ECS tasks were failing health checks because the servi
 
 - **API Service** (`Startup.cs`): I Added `/health` endpoint to confirm readiness.
 
-_Image placeholder for API `/health` endpoint._
+![Jenkins Pipeline](./images/2.png)
+*API `/health` endpoint.*
+
 
 - **Web UI Service** (`Startup.cs`): I also Added `/health` endpoint for Web UI health monitoring.
 
@@ -97,14 +102,12 @@ ECS tasks kept failing to register with the ALB.
 - Configured ALB target groups to point to `/health`.
 
 ---
-
-### HTTP 503 Errors
-
 ### RecourceInitializationError
 
 ---
 
 ### HTTP 503 Errors
+
 
 **Issue**: 
 Even after fixing health check failures, the ALB occasionally returned `503 Service Unavailable`. This is the kind of issue that feels minor but keeps you up at night wondering what you missed!
