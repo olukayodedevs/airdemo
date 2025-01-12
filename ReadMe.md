@@ -220,7 +220,7 @@ The complete Pulumi scripts for this deployment are available in the repository.
      
 
 2. **Trying EC2 Run type instead of Fargate**:
-   - After this submission, when off work, will try re build another pulumi script that will deploy using ec2 run types this time instead of the fargate tasks, maybe it would expose where the issue is actually from.
+   - After this submission, when off work, will try re build another pulumi script that will deploy using ec2 run types this time instead of the fargate, maybe it would expose where the issue is actually from.
 
 ---
 
